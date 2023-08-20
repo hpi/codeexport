@@ -1,9 +1,10 @@
 import json
 from my.coding.commits import commits
-from my.config import commits as user_config
+
+from .exporthelpers.export_helper import Json
 
 class Exporter:
-  def commit_to_dict(c) -> dict:
+  def commit_to_dict(self, c) -> dict:
       """
       Convert a Commit object to a dictionary format.
       """
@@ -16,22 +17,16 @@ class Exporter:
           "ref": c.ref
       }
 
-  def export_json():
+  def export_json(self):
       """
       Exports the commits to a JSON file specified by the export_path in the config.
       """
-      commit_list = [commit_to_dict(c) for c in commits()]
+      commit_list = [self.commit_to_dict(c) for c in commits()]
 
-      export_path = config().export_path
-      if not export_path:
-          raise ValueError("Export path is not set in the user configuration.")
+      print(commit_list)
 
-      export_file = str(export_path[0])  # assuming export_path is a list with a single entry
-
-      with open(export_file, 'w', encoding='utf-8') as f:
-          json.dump(commit_list, f, ensure_ascii=False, indent=4)
-
-      print(f"Commits exported to {export_file}")
+def get_json(**params) -> Json:
+    return Exporter().export_json()
 
 def main() -> None:
     parser = make_parser()
